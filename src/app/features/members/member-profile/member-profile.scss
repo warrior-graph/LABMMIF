@@ -1,0 +1,36 @@
+.page-container {
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+h1 { margin: 0 0 4px; }
+
+.email {
+  color: rgba(0,0,0,.54);
+  margin: 0 0 24px;
+}
+
+mat-card {
+  padding: 24px;
+}
+
+.name-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-bottom: 4px;
+
+  mat-form-field { width: 100%; }
+}
+
+.full-width {
+  width: 100%;
+  display: block;
+  margin-bottom: 12px;
+}
+
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 8px;
+}

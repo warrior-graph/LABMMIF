@@ -1,0 +1,36 @@
+.page-container {
+  max-width: 760px;
+  margin: 0 auto;
+}
+
+.back-link {
+  display: inline-flex;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+mat-card {
+  padding: 24px;
+}
+
+.full-width {
+  width: 100%;
+  display: block;
+  margin-bottom: 12px;
+}
+
+.two-col {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-bottom: 12px;
+
+  mat-form-field { width: 100%; }
+}
+
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 16px;
+}

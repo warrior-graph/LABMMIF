@@ -1,0 +1,38 @@
+.page-container {
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.back-link {
+  display: inline-flex;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+h1 { margin: 0 0 8px; }
+
+.description {
+  color: rgba(0,0,0,.6);
+  margin: 0 0 32px;
+}
+
+.add-member-row {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+.full-width { width: 100%; }
+
+.spinner-center {
+  display: flex;
+  justify-content: center;
+  padding: 64px;
+}
+
+.empty-cell {
+  text-align: center;
+  padding: 32px !important;
+  color: rgba(0,0,0,.54);
+}

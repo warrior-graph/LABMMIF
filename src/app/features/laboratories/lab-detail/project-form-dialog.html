@@ -1,0 +1,93 @@
+<h2 mat-dialog-title>New Project</h2>
+
+<mat-dialog-content>
+  <form [formGroup]="form" (ngSubmit)="submit()" id="project-form" novalidate>
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Name</mat-label>
+      <input matInput formControlName="name" />
+      @if (form.get('name')?.hasError('required') && form.get('name')?.touched) {
+        <mat-error>Name is required</mat-error>
+      }
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Description (optional)</mat-label>
+      <textarea matInput formControlName="description" rows="3"></textarea>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Status</mat-label>
+      <mat-select formControlName="status">
+        @for (s of statuses; track s.value) {
+          <mat-option [value]="s.value">{{ s.label }}</mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+
+    <div class="date-row">
+      <mat-form-field appearance="outline">
+        <mat-label>Start Date (optional)</mat-label>
+        <input matInput type="date" formControlName="start_date" />
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>End Date (optional)</mat-label>
+        <input matInput type="date" formControlName="end_date" />
+      </mat-form-field>
+    </div>
+
+    @if (data.research.length > 0) {
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Research Group (optional)</mat-label>
+        <mat-select formControlName="research_id">
+          <mat-option [value]="null">None</mat-option>
+          @for (r of data.research; track r.id) {
+            <mat-option [value]="r.id">{{ r.name }}</mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+    }
+
+    @if (error()) {
+      <p class="error-text">{{ error() }}</p>
+    }
+  </form>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button (click)="dialogRef.close()">Cancel</button>
+  <button
+    mat-raised-button
+    color="primary"
+    form="project-form"
+    type="submit"
+    [disabled]="loading()"
+  >
+    @if (loading()) {
+      <mat-progress-spinner diameter="18" mode="indeterminate" />
+    } @else {
+      Create
+    }
+  </button>
+</mat-dialog-actions>
+
+<style>
+  .full-width {
+    width: 100%;
+    display: block;
+    margin-bottom: 8px;
+  }
+  .date-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-bottom: 8px;
+    mat-form-field {
+      width: 100%;
+    }
+  }
+  .error-text {
+    color: #b00020;
+    font-size: 14px;
+  }
+</style>

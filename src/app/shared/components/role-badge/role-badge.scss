@@ -1,0 +1,22 @@
+:host ::ng-deep {
+  .role-ceo .mdc-evolution-chip__text-label {
+    background-color: #7b1fa2;
+    color: #fff;
+  }
+  .role-manager .mdc-evolution-chip__text-label {
+    background-color: #1565c0;
+    color: #fff;
+  }
+  .role-lead .mdc-evolution-chip__text-label {
+    background-color: #00695c;
+    color: #fff;
+  }
+  .role-member .mdc-evolution-chip__text-label {
+    background-color: #37474f;
+    color: #fff;
+  }
+  .role-staff .mdc-evolution-chip__text-label {
+    background-color: #757575;
+    color: #fff;
+  }
+}

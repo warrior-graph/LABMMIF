@@ -1,0 +1,63 @@
+import { Injectable, inject } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
+
+import { environment } from '../../../environments/environment';
+import { LabMembership, Member } from '../models';
+
+export interface AddMemberPayload {
+  member_id: number;
+  role: string;
+  compensation_type?: string;
+  compensation_value?: number;
+}
+
+export interface UpdateMembershipPayload {
+  role?: string;
+  compensation_type?: string | null;
+  compensation_value?: number | null;
+}
+
+@Injectable({ providedIn: 'root' })
+export class MemberService {
+  private readonly http = inject(HttpClient);
+  private readonly api = environment.apiUrl;
+
+  getLabMembers(labId: number): Observable<LabMembership[]> {
+    return this.http.get<LabMembership[]>(`${this.api}/labs/${labId}/members`);
+  }
+
+  addMember(labId: number, data: AddMemberPayload): Observable<LabMembership> {
+    return this.http.post<LabMembership>(`${this.api}/labs/${labId}/members`, data);
+  }
+
+  getMember(labId: number, memberId: number): Observable<LabMembership> {
+    return this.http.get<LabMembership>(
+      `${this.api}/labs/${labId}/members/${memberId}`,
+    );
+  }
+
+  updateMembership(
+    labId: number,
+    memberId: number,
+    data: UpdateMembershipPayload,
+  ): Observable<LabMembership> {
+    return this.http.put<LabMembership>(
+      `${this.api}/labs/${labId}/members/${memberId}`,
+      data,
+    );
+  }
+
+  removeMember(labId: number, memberId: number): Observable<void> {
+    return this.http.delete<void>(
+      `${this.api}/labs/${labId}/members/${memberId}`,
+    );
+  }
+
+  updateProfile(
+    memberId: number,
+    data: Partial<{ first_name: string; last_name: string; password: string }>,
+  ): Observable<Member> {
+    return this.http.put<Member>(`${this.api}/members/${memberId}`, data);
+  }
+}

@@ -1,0 +1,70 @@
+<h2 mat-dialog-title>Add Member to Lab</h2>
+
+<mat-dialog-content>
+  <form [formGroup]="form" (ngSubmit)="submit()" id="member-form" novalidate>
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Member ID</mat-label>
+      <input matInput type="number" formControlName="member_id" />
+      @if (form.get('member_id')?.hasError('min') && form.get('member_id')?.touched) {
+        <mat-error>Enter a valid member ID</mat-error>
+      }
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Role</mat-label>
+      <mat-select formControlName="role">
+        @for (r of roles; track r.value) {
+          <mat-option [value]="r.value">{{ r.label }}</mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Compensation Type (optional)</mat-label>
+      <mat-select formControlName="compensation_type">
+        <mat-option value="">None</mat-option>
+        @for (ct of compensationTypes; track ct.value) {
+          <mat-option [value]="ct.value">{{ ct.label }}</mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Compensation Value (optional)</mat-label>
+      <input matInput type="number" formControlName="compensation_value" step="0.01" />
+    </mat-form-field>
+
+    @if (error()) {
+      <p class="error-text">{{ error() }}</p>
+    }
+  </form>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button (click)="dialogRef.close()">Cancel</button>
+  <button
+    mat-raised-button
+    color="primary"
+    form="member-form"
+    type="submit"
+    [disabled]="loading()"
+  >
+    @if (loading()) {
+      <mat-progress-spinner diameter="18" mode="indeterminate" />
+    } @else {
+      Add Member
+    }
+  </button>
+</mat-dialog-actions>
+
+<style>
+  .full-width {
+    width: 100%;
+    display: block;
+    margin-bottom: 8px;
+  }
+  .error-text {
+    color: #b00020;
+    font-size: 14px;
+  }
+</style>

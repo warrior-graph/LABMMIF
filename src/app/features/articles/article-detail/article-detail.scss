@@ -1,0 +1,58 @@
+.page-container {
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.back-link {
+  display: inline-flex;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+h1 {
+  margin: 0 0 16px;
+  font-size: 28px;
+}
+
+.meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 24px;
+  margin-bottom: 24px;
+  color: rgba(0,0,0,.6);
+  font-size: 14px;
+}
+
+.abstract {
+  margin-bottom: 24px;
+
+  h2 { font-size: 20px; }
+
+  p {
+    line-height: 1.7;
+    color: rgba(0,0,0,.8);
+  }
+}
+
+.authors {
+  margin-top: 24px;
+
+  h2 { font-size: 20px; }
+}
+
+.add-author-row {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-top: 16px;
+}
+
+.empty-state {
+  color: rgba(0,0,0,.54);
+}
+
+.spinner-center {
+  display: flex;
+  justify-content: center;
+  padding: 64px;
+}

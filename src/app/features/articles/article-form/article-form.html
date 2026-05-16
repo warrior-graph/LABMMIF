@@ -1,0 +1,55 @@
+<div class="page-container">
+  <a mat-button [routerLink]="['/labs', labId]" class="back-link">
+    <mat-icon>arrow_back</mat-icon>
+    Back to Lab
+  </a>
+
+  <mat-card>
+    <mat-card-title>New Article</mat-card-title>
+    <mat-card-content>
+      <form [formGroup]="form" (ngSubmit)="submit()" novalidate>
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Title</mat-label>
+          <input matInput formControlName="title" />
+          @if (form.get('title')?.hasError('required') && form.get('title')?.touched) {
+            <mat-error>Title is required</mat-error>
+          }
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Abstract</mat-label>
+          <textarea matInput formControlName="abstract" rows="6"></textarea>
+        </mat-form-field>
+
+        <div class="two-col">
+          <mat-form-field appearance="outline">
+            <mat-label>Journal</mat-label>
+            <input matInput formControlName="journal" />
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>DOI</mat-label>
+            <input matInput formControlName="doi" />
+            <mat-hint>e.g. 10.1000/xyz123</mat-hint>
+          </mat-form-field>
+        </div>
+
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Publication Date</mat-label>
+          <input matInput type="date" formControlName="published_at" />
+        </mat-form-field>
+
+        <div class="form-actions">
+          <button mat-button type="button" [routerLink]="['/labs', labId]">Cancel</button>
+          <button mat-raised-button color="primary" type="submit" [disabled]="loading()">
+            @if (loading()) {
+              <mat-progress-spinner diameter="18" mode="indeterminate" />
+            } @else {
+              Create Article
+            }
+          </button>
+        </div>
+      </form>
+    </mat-card-content>
+  </mat-card>
+</div>

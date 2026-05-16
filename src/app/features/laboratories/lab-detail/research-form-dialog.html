@@ -1,0 +1,51 @@
+<h2 mat-dialog-title>New Research Group</h2>
+
+<mat-dialog-content>
+  <form [formGroup]="form" (ngSubmit)="submit()" id="research-form" novalidate>
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Name</mat-label>
+      <input matInput formControlName="name" />
+      @if (form.get('name')?.hasError('required') && form.get('name')?.touched) {
+        <mat-error>Name is required</mat-error>
+      }
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Description (optional)</mat-label>
+      <textarea matInput formControlName="description" rows="3"></textarea>
+    </mat-form-field>
+
+    @if (error()) {
+      <p class="error-text">{{ error() }}</p>
+    }
+  </form>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button (click)="dialogRef.close()">Cancel</button>
+  <button
+    mat-raised-button
+    color="primary"
+    form="research-form"
+    type="submit"
+    [disabled]="loading()"
+  >
+    @if (loading()) {
+      <mat-progress-spinner diameter="18" mode="indeterminate" />
+    } @else {
+      Create
+    }
+  </button>
+</mat-dialog-actions>
+
+<style>
+  .full-width {
+    width: 100%;
+    display: block;
+    margin-bottom: 8px;
+  }
+  .error-text {
+    color: #b00020;
+    font-size: 14px;
+  }
+</style>

@@ -1,0 +1,67 @@
+.page-container {
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.back-link {
+  margin-bottom: 16px;
+  display: inline-flex;
+  align-items: center;
+}
+
+.project-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: 24px;
+
+  h1 { margin: 0 0 8px; }
+  .description { color: rgba(0,0,0,.6); margin: 0; }
+}
+
+.meta-grid {
+  display: flex;
+  gap: 32px;
+  margin-bottom: 32px;
+}
+
+.meta-item {
+  display: flex;
+  flex-direction: column;
+
+  .label {
+    font-size: 12px;
+    color: rgba(0,0,0,.54);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 4px;
+  }
+}
+
+.add-member-row {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+.full-width { width: 100%; }
+
+.spinner-center {
+  display: flex;
+  justify-content: center;
+  padding: 64px;
+}
+
+.empty-cell {
+  text-align: center;
+  padding: 32px !important;
+  color: rgba(0,0,0,.54);
+}
+
+::ng-deep {
+  .status-planned { background: #e3f2fd !important; color: #1565c0 !important; }
+  .status-active { background: #e8f5e9 !important; color: #2e7d32 !important; }
+  .status-completed { background: #f3e5f5 !important; color: #6a1b9a !important; }
+  .status-cancelled { background: #fce4ec !important; color: #b71c1c !important; }
+}
