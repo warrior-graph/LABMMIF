@@ -24,10 +24,20 @@
     @if (canManageMembers()) {
       <div class="add-member-row">
         <mat-form-field appearance="outline">
-          <mat-label>Member ID</mat-label>
-          <input matInput type="number" [(ngModel)]="addMemberId" placeholder="Enter member ID" />
+          <mat-label>Select Member</mat-label>
+          <mat-select [value]="selectedMemberId()" (selectionChange)="selectedMemberId.set($event.value)">
+            @if (availableMembers().length === 0) {
+              <mat-option disabled>All lab members already added</mat-option>
+            }
+            @for (lm of availableMembers(); track lm.member_id) {
+              <mat-option [value]="lm.member_id">
+                {{ lm.member?.first_name }} {{ lm.member?.last_name }}
+              </mat-option>
+            }
+          </mat-select>
         </mat-form-field>
-        <button mat-raised-button color="primary" (click)="addMember()" [disabled]="!addMemberId()">
+        <button mat-raised-button color="primary" (click)="addMember()"
+          [disabled]="!selectedMemberId() || availableMembers().length === 0">
           <mat-icon>person_add</mat-icon>
           Add
         </button>

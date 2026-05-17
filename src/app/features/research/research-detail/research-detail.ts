@@ -1,11 +1,11 @@
 import { Component, OnInit, computed, inject, signal } from '@angular/core';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
-import { FormsModule } from '@angular/forms';
 import { MatButton, MatIconButton } from '@angular/material/button';
 import { MatDialog } from '@angular/material/dialog';
 import { MatFormField, MatLabel } from '@angular/material/form-field';
 import { MatIcon } from '@angular/material/icon';
-import { MatInput } from '@angular/material/input';
+import { MatSelect } from '@angular/material/select';
+import { MatOption } from '@angular/material/core';
 import { MatProgressSpinner } from '@angular/material/progress-spinner';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import {
@@ -36,7 +36,6 @@ import {
   selector: 'app-research-detail',
   imports: [
     RouterLink,
-    FormsModule,
     MatButton,
     MatIconButton,
     MatIcon,
@@ -55,7 +54,8 @@ import {
     MatTooltip,
     MatFormField,
     MatLabel,
-    MatInput,
+    MatSelect,
+    MatOption,
   ],
   templateUrl: './research-detail.html',
   styleUrl: './research-detail.scss',
@@ -63,8 +63,14 @@ import {
 export class ResearchDetail implements OnInit {
   protected readonly research = signal<Research | null>(null);
   protected readonly loading = signal(true);
-  protected readonly addMemberId = signal('');
+  protected readonly selectedMemberId = signal<number | null>(null);
+  protected readonly labMembers = signal<LabMembership[]>([]);
   protected readonly currentMembership = signal<LabMembership | null>(null);
+
+  protected readonly availableMembers = computed(() => {
+    const inResearch = new Set(this.research()?.members?.map(m => m.id) ?? []);
+    return this.labMembers().filter(lm => !inResearch.has(lm.member_id));
+  });
 
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
@@ -91,6 +97,7 @@ export class ResearchDetail implements OnInit {
     this.load();
     this.memberService.getLabMembers(this.labId).subscribe({
       next: memberships => {
+        this.labMembers.set(memberships);
         const userId = this.authService.currentUser()?.id;
         if (userId) {
           this.currentMembership.set(memberships.find(m => m.member_id === userId) ?? null);
@@ -115,12 +122,12 @@ export class ResearchDetail implements OnInit {
   }
 
   protected addMember(): void {
-    const id = Number(this.addMemberId());
+    const id = this.selectedMemberId();
     if (!id) return;
     this.researchService.addMember(this.labId, this.researchId, id).subscribe({
       next: r => {
         this.research.set(r);
-        this.addMemberId.set('');
+        this.selectedMemberId.set(null);
         this.snackBar.open('Member added', 'Dismiss', { duration: 2000 });
       },
       error: err =>

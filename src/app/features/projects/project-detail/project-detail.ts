@@ -22,8 +22,8 @@ import {
 import { MatChipSet, MatChip } from '@angular/material/chips';
 import { MatTooltip } from '@angular/material/tooltip';
 import { MatFormField, MatLabel } from '@angular/material/form-field';
-import { MatInput } from '@angular/material/input';
-import { FormsModule } from '@angular/forms';
+import { MatSelect } from '@angular/material/select';
+import { MatOption } from '@angular/material/core';
 
 import { LabMembership, LabRole, MANAGER_ROLES, Member, Project } from '../../../core/models';
 import { AuthService } from '../../../core/auth/auth.service';
@@ -40,7 +40,6 @@ import {
     RouterLink,
     DatePipe,
     TitleCasePipe,
-    FormsModule,
     MatButton,
     MatIconButton,
     MatIcon,
@@ -61,7 +60,8 @@ import {
     MatTooltip,
     MatFormField,
     MatLabel,
-    MatInput,
+    MatSelect,
+    MatOption,
   ],
   templateUrl: './project-detail.html',
   styleUrl: './project-detail.scss',
@@ -69,8 +69,14 @@ import {
 export class ProjectDetail implements OnInit {
   protected readonly project = signal<Project | null>(null);
   protected readonly loading = signal(true);
-  protected readonly addMemberId = signal('');
+  protected readonly selectedMemberId = signal<number | null>(null);
+  protected readonly labMembers = signal<LabMembership[]>([]);
   protected readonly currentMembership = signal<LabMembership | null>(null);
+
+  protected readonly availableMembers = computed(() => {
+    const inProject = new Set(this.project()?.members?.map(m => m.id) ?? []);
+    return this.labMembers().filter(lm => !inProject.has(lm.member_id));
+  });
 
   protected readonly authService = inject(AuthService);
   private readonly route = inject(ActivatedRoute);
@@ -100,9 +106,9 @@ export class ProjectDetail implements OnInit {
     this.labId = Number(this.route.snapshot.paramMap.get('labId'));
     this.projectId = Number(this.route.snapshot.paramMap.get('projectId'));
     this.load();
-    // Load current user's lab membership to determine permissions
     this.memberService.getLabMembers(this.labId).subscribe({
       next: memberships => {
+        this.labMembers.set(memberships);
         const userId = this.authService.currentUser()?.id;
         if (userId) {
           this.currentMembership.set(memberships.find(m => m.member_id === userId) ?? null);
@@ -127,12 +133,12 @@ export class ProjectDetail implements OnInit {
   }
 
   protected addMember(): void {
-    const id = Number(this.addMemberId());
+    const id = this.selectedMemberId();
     if (!id) return;
     this.projectService.addMember(this.labId, this.projectId, id).subscribe({
       next: p => {
         this.project.set(p);
-        this.addMemberId.set('');
+        this.selectedMemberId.set(null);
         this.snackBar.open('Member added', 'Dismiss', { duration: 2000 });
       },
       error: (err) =>
