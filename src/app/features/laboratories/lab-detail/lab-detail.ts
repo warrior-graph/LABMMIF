@@ -219,6 +219,7 @@ export class LabDetail implements OnInit {
         labId: this.labId,
         membership: m,
         requesterRoleLevel: this.isSuperAdmin() ? -1 : this.currentLevel(),
+        labMembers: this.members().filter(x => x.member_id !== m.member_id),
       },
     });
     ref.afterClosed().subscribe(updated => {

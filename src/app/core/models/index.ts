@@ -111,6 +111,7 @@ export interface LabMembership {
   joined_at: string;
   compensation_type: CompensationType | null;
   compensation_value: number | null;
+  reports_to_id?: number | null;
   member?: Member;
   laboratory?: Laboratory;
 }

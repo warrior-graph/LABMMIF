@@ -17,6 +17,7 @@ export interface UpdateMembershipPayload {
   specialization?: string | null;
   compensation_type?: string | null;
   compensation_value?: number | null;
+  reports_to_id?: number | null;
 }
 
 @Injectable({ providedIn: 'root' })

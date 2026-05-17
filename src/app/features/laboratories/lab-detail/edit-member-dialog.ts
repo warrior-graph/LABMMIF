@@ -26,6 +26,7 @@ export interface EditMemberData {
   labId: number;
   membership: LabMembership;
   requesterRoleLevel: number;
+  labMembers: LabMembership[];
 }
 
 @Component({
@@ -82,6 +83,20 @@ export interface EditMemberData {
           </mat-form-field>
         }
 
+        @if (data.requesterRoleLevel <= 0) {
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Reports To</mat-label>
+            <mat-select formControlName="reports_to_id">
+              <mat-option [value]="null">— Default (by role level) —</mat-option>
+              @for (m of data.labMembers; track m.member_id) {
+                <mat-option [value]="m.member_id">
+                  {{ m.member?.first_name }} {{ m.member?.last_name }} ({{ m.role }})
+                </mat-option>
+              }
+            </mat-select>
+          </mat-form-field>
+        }
+
         @if (error()) {
           <p class="error-msg">{{ error() }}</p>
         }
@@ -132,6 +147,7 @@ export class EditMemberDialog implements OnInit {
     specialization: [this.data.membership.specialization ?? ''],
     compensation_type: [this.data.membership.compensation_type ?? ''],
     compensation_value: [this.data.membership.compensation_value as number | null],
+    reports_to_id: [this.data.membership.reports_to_id ?? null as number | null],
   });
 
   ngOnInit(): void {
@@ -149,7 +165,7 @@ export class EditMemberDialog implements OnInit {
     if (this.form.invalid) return;
     this.loading.set(true);
     this.error.set(null);
-    const { role, specialization, compensation_type, compensation_value } =
+    const { role, specialization, compensation_type, compensation_value, reports_to_id } =
       this.form.getRawValue();
     this.memberService
       .updateMembership(this.data.labId, this.data.membership.member_id, {
@@ -157,6 +173,7 @@ export class EditMemberDialog implements OnInit {
         specialization: specialization || null,
         compensation_type: compensation_type || null,
         compensation_value: compensation_type ? compensation_value : null,
+        ...(this.data.requesterRoleLevel <= 0 && { reports_to_id: reports_to_id ?? null }),
       })
       .subscribe({
         next: updated => this.dialogRef.close(updated),

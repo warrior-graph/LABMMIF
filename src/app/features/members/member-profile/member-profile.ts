@@ -82,13 +82,23 @@ export class MemberProfile implements OnInit {
     forkJoin(requests).subscribe({
       next: labMembersArray => {
         const info: LabReportingInfo[] = memberships.map((myMembership, i) => {
-          const myLevel = ROLE_LEVEL[myMembership.role as LabRole] ?? 99;
-          const superiors = myLevel === 0
-            ? []
-            : labMembersArray[i].filter(m =>
-                m.member_id !== myMembership.member_id &&
-                (ROLE_LEVEL[m.role as LabRole] ?? 99) === myLevel - 1
-              );
+          let superiors: LabMembership[];
+          if (myMembership.reports_to_id != null) {
+            // Explicit assignment: find the assigned person
+            const assigned = labMembersArray[i].find(
+              m => m.member_id === myMembership.reports_to_id
+            );
+            superiors = assigned ? [assigned] : [];
+          } else {
+            // Default inference: all members one role level above
+            const myLevel = ROLE_LEVEL[myMembership.role as LabRole] ?? 99;
+            superiors = myLevel === 0
+              ? []
+              : labMembersArray[i].filter(m =>
+                  m.member_id !== myMembership.member_id &&
+                  (ROLE_LEVEL[m.role as LabRole] ?? 99) === myLevel - 1
+                );
+          }
           return {
             labId: myMembership.lab_id,
             labName: myMembership.laboratory?.name ?? `Lab #${myMembership.lab_id}`,
