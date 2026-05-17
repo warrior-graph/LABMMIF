@@ -7,13 +7,13 @@ import { LabMembership, Member } from '../models';
 
 export interface AddMemberPayload {
   member_id: number;
-  role: string;
+  roles: string[];
   compensation_type?: string;
   compensation_value?: number;
 }
 
 export interface UpdateMembershipPayload {
-  role?: string;
+  roles?: string[];
   specialization?: string | null;
   compensation_type?: string | null;
   compensation_value?: number | null;

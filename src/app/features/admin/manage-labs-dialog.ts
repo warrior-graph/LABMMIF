@@ -53,7 +53,7 @@ export interface ManageLabsData {
           @for (m of memberships(); track m.lab_id) {
             <div class="membership-row">
               <span class="lab-name">{{ m.laboratory?.name ?? 'Lab #' + m.lab_id }}</span>
-              <span class="role-badge">{{ roleLabel(m.role) }}</span>
+              <span class="role-badge">{{ m.roles.map(roleLabel).join(', ') }}</span>
               <button mat-icon-button color="warn"
                 [matTooltip]="isSelf() ? 'Cannot modify your own membership' : 'Remove from this lab'"
                 (click)="remove(m)" [disabled]="removing().has(m.lab_id) || isSelf()">
@@ -85,7 +85,7 @@ export interface ManageLabsData {
 
           <mat-form-field appearance="outline">
             <mat-label>Role</mat-label>
-            <mat-select formControlName="role">
+            <mat-select formControlName="roles" multiple>
               @for (r of roles; track r.value) {
                 <mat-option [value]="r.value">{{ r.label }}</mat-option>
               }
@@ -159,7 +159,7 @@ export class ManageLabsDialog implements OnInit {
 
   protected readonly addForm = this.fb.nonNullable.group({
     lab_id: [null as number | null, Validators.required],
-    role: [LabRole.RESEARCHER as string, Validators.required],
+    roles: [[LabRole.RESEARCHER as string], Validators.required],
   });
 
   ngOnInit(): void {
@@ -200,10 +200,10 @@ export class ManageLabsDialog implements OnInit {
 
   protected add(): void {
     if (this.addForm.invalid) return;
-    const { lab_id, role } = this.addForm.getRawValue();
+    const { lab_id, roles } = this.addForm.getRawValue();
     if (!lab_id) return;
     this.adding.set(true);
-    this.memberService.addMember(lab_id, { member_id: this.data.member.id, role }).subscribe({
+    this.memberService.addMember(lab_id, { member_id: this.data.member.id, roles }).subscribe({
       next: membership => {
         this.memberships.update(list => [...list, membership]);
         this.adding.set(false);

@@ -54,7 +54,7 @@ export interface EditMemberData {
       <form [formGroup]="form">
         <mat-form-field appearance="outline" class="full-width">
           <mat-label>Role</mat-label>
-          <mat-select formControlName="role">
+          <mat-select formControlName="roles" multiple>
             @for (r of roles(); track r.value) {
               <mat-option [value]="r.value">{{ r.label }}</mat-option>
             }
@@ -90,7 +90,7 @@ export interface EditMemberData {
               <mat-option [value]="null">— Default (by role level) —</mat-option>
               @for (m of data.labMembers; track m.member_id) {
                 <mat-option [value]="m.member_id">
-                  {{ m.member?.first_name }} {{ m.member?.last_name }} ({{ m.role }})
+                  {{ m.member?.first_name }} {{ m.member?.last_name }} ({{ m.roles.join(', ') }})
                 </mat-option>
               }
             </mat-select>
@@ -143,7 +143,7 @@ export class EditMemberDialog implements OnInit {
   ];
 
   protected readonly form = this.fb.nonNullable.group({
-    role: [this.data.membership.role as string, Validators.required],
+    roles: [this.data.membership.roles ?? [] as string[], Validators.required],
     specialization: [this.data.membership.specialization ?? ''],
     compensation_type: [this.data.membership.compensation_type ?? ''],
     compensation_value: [this.data.membership.compensation_value as number | null],
@@ -165,11 +165,11 @@ export class EditMemberDialog implements OnInit {
     if (this.form.invalid) return;
     this.loading.set(true);
     this.error.set(null);
-    const { role, specialization, compensation_type, compensation_value, reports_to_id } =
+    const { roles, specialization, compensation_type, compensation_value, reports_to_id } =
       this.form.getRawValue();
     this.memberService
       .updateMembership(this.data.labId, this.data.membership.member_id, {
-        role,
+        roles,
         specialization: specialization || null,
         compensation_type: compensation_type || null,
         compensation_value: compensation_type ? compensation_value : null,

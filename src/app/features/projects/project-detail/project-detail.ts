@@ -96,10 +96,10 @@ export class ProjectDetail implements OnInit {
     const m = this.currentMembership();
     if (!m) return false;
     return (
-      m.role === LabRole.CEO ||
-      m.role === LabRole.ENGINEERING_MANAGER ||
-      m.role === LabRole.PROJECT_MANAGER
-    );
+      m.roles?.includes(LabRole.CEO) ||
+      m.roles?.includes(LabRole.ENGINEERING_MANAGER) ||
+      m.roles?.includes(LabRole.PROJECT_MANAGER)
+    ) ?? false;
   });
 
   ngOnInit(): void {

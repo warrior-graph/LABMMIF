@@ -106,7 +106,7 @@ export interface Laboratory {
 export interface LabMembership {
   member_id: number;
   lab_id: number;
-  role: LabRole;
+  roles: LabRole[];
   specialization?: string | null;
   joined_at: string;
   compensation_type: CompensationType | null;

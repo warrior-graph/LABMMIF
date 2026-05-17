@@ -1,7 +1,7 @@
 import { Component, input } from '@angular/core';
 import { MatChip, MatChipSet } from '@angular/material/chips';
 
-import { LAB_ROLE_LABELS, LabRole } from '../../../core/models';
+import { LAB_ROLE_LABELS, LabRole, ROLE_LEVEL } from '../../../core/models';
 
 const ROLE_COLOR: Record<LabRole, string> = {
   [LabRole.CEO]: 'role-ceo',
@@ -22,13 +22,12 @@ const ROLE_COLOR: Record<LabRole, string> = {
   styleUrl: './role-badge.scss',
 })
 export class RoleBadge {
-  readonly role = input.required<LabRole>();
+  readonly roles = input.required<LabRole[]>();
 
-  get label(): string {
-    return LAB_ROLE_LABELS[this.role()] ?? this.role();
-  }
-
-  get colorClass(): string {
-    return ROLE_COLOR[this.role()] ?? '';
+  get chips(): { label: string; colorClass: string }[] {
+    return (this.roles() ?? []).map(r => ({
+      label: LAB_ROLE_LABELS[r] ?? r,
+      colorClass: ROLE_COLOR[r] ?? '',
+    }));
   }
 }

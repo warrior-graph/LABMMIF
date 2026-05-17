@@ -68,6 +68,15 @@ export class OrgChart implements OnInit {
     return LAB_ROLE_LABELS[role as LabRole] ?? role;
   }
 
+  protected roleLabels(roles: LabRole[]): string {
+    return (roles ?? []).map(r => LAB_ROLE_LABELS[r] ?? r).join(', ');
+  }
+
+  private primaryRoleLevel(roles: LabRole[]): number {
+    if (!roles?.length) return 99;
+    return Math.min(...roles.map(r => ROLE_LEVEL[r] ?? 99));
+  }
+
   protected initials(m: LabMembership): string {
     const first = m.member?.first_name?.[0] ?? '';
     const last = m.member?.last_name?.[0] ?? '';
@@ -92,14 +101,14 @@ export class OrgChart implements OnInit {
 
     for (const node of nodes.values()) {
       const m = node.membership;
-      const myLevel = ROLE_LEVEL[m.role as LabRole] ?? 99;
+      const myLevel = this.primaryRoleLevel(m.roles as LabRole[]);
       let parentNode: TreeNode | null = null;
 
       if (m.reports_to_id != null && nodes.has(m.reports_to_id)) {
         parentNode = nodes.get(m.reports_to_id)!;
       } else if (myLevel > 0) {
         const parentsAbove = memberships.filter(
-          p => (ROLE_LEVEL[p.role as LabRole] ?? 99) === myLevel - 1
+          p => this.primaryRoleLevel(p.roles as LabRole[]) === myLevel - 1
         );
         if (parentsAbove.length === 1) {
           parentNode = nodes.get(parentsAbove[0].member_id)!;
@@ -113,8 +122,8 @@ export class OrgChart implements OnInit {
     }
 
     const sortNodes = (a: TreeNode, b: TreeNode): number => {
-      const la = ROLE_LEVEL[a.membership.role as LabRole] ?? 99;
-      const lb = ROLE_LEVEL[b.membership.role as LabRole] ?? 99;
+      const la = this.primaryRoleLevel(a.membership.roles as LabRole[]);
+      const lb = this.primaryRoleLevel(b.membership.roles as LabRole[]);
       return la !== lb
         ? la - lb
         : (a.membership.member?.last_name ?? '').localeCompare(

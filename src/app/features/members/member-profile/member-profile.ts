@@ -91,12 +91,16 @@ export class MemberProfile implements OnInit {
             superiors = assigned ? [assigned] : [];
           } else {
             // Default inference: all members one role level above
-            const myLevel = ROLE_LEVEL[myMembership.role as LabRole] ?? 99;
+            const myLevel = myMembership.roles?.length
+              ? Math.min(...myMembership.roles.map(r => ROLE_LEVEL[r as LabRole] ?? 99))
+              : 99;
             superiors = myLevel === 0
               ? []
               : labMembersArray[i].filter(m =>
                   m.member_id !== myMembership.member_id &&
-                  (ROLE_LEVEL[m.role as LabRole] ?? 99) === myLevel - 1
+                  (m.roles?.length
+                    ? Math.min(...m.roles.map(r => ROLE_LEVEL[r as LabRole] ?? 99))
+                    : 99) === myLevel - 1
                 );
           }
           return {

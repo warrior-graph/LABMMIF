@@ -75,7 +75,7 @@
                 @for (m of info.reportsTo; track m.member_id) {
                   <div class="report-chip">
                     <span class="report-name">{{ m.member?.first_name }} {{ m.member?.last_name }}</span>
-                    <span class="report-role">{{ roleLabel(m.role) }}</span>
+                    <span class="report-role">{{ m.roles.map(roleLabel).join(', ') }}</span>
                   </div>
                 }
               </div>

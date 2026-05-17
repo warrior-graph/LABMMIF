@@ -1,3 +1,5 @@
 <mat-chip-set>
-  <mat-chip [class]="colorClass">{{ label }}</mat-chip>
+  @for (chip of chips; track chip.label) {
+    <mat-chip [class]="chip.colorClass">{{ chip.label }}</mat-chip>
+  }
 </mat-chip-set>

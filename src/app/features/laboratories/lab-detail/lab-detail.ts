@@ -113,41 +113,45 @@ export class LabDetail implements OnInit {
   protected readonly isCeo = computed(() => {
     if (this.isSuperAdmin()) return true;
     const m = this.currentMembership();
-    return m?.role === LabRole.CEO;
+    return m?.roles?.includes(LabRole.CEO) ?? false;
   });
 
   protected readonly isChiefScientist = computed(() => {
     if (this.isSuperAdmin()) return true;
     const m = this.currentMembership();
-    return m ? (m.role === LabRole.CEO || m.role === LabRole.CHIEF_SCIENTIST) : false;
+    return m ? (m.roles?.includes(LabRole.CEO) || m.roles?.includes(LabRole.CHIEF_SCIENTIST)) : false;
   });
 
   protected readonly isManager = computed(() => {
     if (this.isSuperAdmin()) return true;
     const m = this.currentMembership();
-    return m ? MANAGER_ROLES.includes(m.role) : false;
+    return m ? m.roles?.some(r => MANAGER_ROLES.includes(r as LabRole)) : false;
   });
 
   protected readonly isTechLead = computed(() => {
     if (this.isSuperAdmin()) return true;
     const m = this.currentMembership();
-    return m ? TECH_LEAD_AND_ABOVE.includes(m.role) : false;
+    return m ? m.roles?.some(r => TECH_LEAD_AND_ABOVE.includes(r as LabRole)) : false;
   });
 
   protected readonly isResearcher = computed(() => {
     if (this.isSuperAdmin()) return true;
     const m = this.currentMembership();
-    return m ? RESEARCHER_AND_ABOVE.includes(m.role) : false;
+    return m ? m.roles?.some(r => RESEARCHER_AND_ABOVE.includes(r as LabRole)) : false;
   });
 
-  protected readonly currentLevel = computed(() =>
-    ROLE_LEVEL[this.currentMembership()?.role as LabRole] ?? 99
-  );
+  protected readonly currentLevel = computed(() => {
+    const roles = this.currentMembership()?.roles;
+    if (!roles?.length) return 99;
+    return Math.min(...roles.map(r => ROLE_LEVEL[r as LabRole] ?? 99));
+  });
 
   protected canManage(m: LabMembership): boolean {
     if (this.isSuperAdmin()) return true;
     const myLevel = this.currentLevel();
-    const targetLevel = ROLE_LEVEL[m.role as LabRole] ?? 99;
+    const targetLevel = m.roles?.length
+      ? Math.min(...m.roles.map(r => ROLE_LEVEL[r as LabRole] ?? 99))
+      : 99;
     return myLevel < targetLevel;
   }
 
@@ -251,7 +255,7 @@ export class LabDetail implements OnInit {
   // ─── Projects ──────────────────────────────────────────────────────────────
 
   protected openAddProject(): void {
-    const techLeads = this.members().filter(m => m.role === LabRole.TECH_LEAD);
+    const techLeads = this.members().filter(m => m.roles?.includes(LabRole.TECH_LEAD));
     const ref = this.dialog.open(ProjectFormDialog, {
       width: '520px',
       data: { labId: this.labId, research: this.research(), techLeads },
@@ -296,7 +300,7 @@ export class LabDetail implements OnInit {
 
   protected openAddResearch(): void {
     const chiefScientists = this.members().filter(
-      m => m.role === LabRole.CHIEF_SCIENTIST || m.role === LabRole.CEO
+      m => m.roles?.some(r => r === LabRole.CHIEF_SCIENTIST || r === LabRole.CEO)
     );
     const ref = this.dialog.open(ResearchFormDialog, {
       width: '480px',

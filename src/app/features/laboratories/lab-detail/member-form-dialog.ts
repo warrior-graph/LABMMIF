@@ -64,7 +64,7 @@ export class MemberFormDialog implements OnInit {
 
   protected readonly form = this.fb.nonNullable.group({
     cpf: ['', Validators.required],
-    role: ['' as string, Validators.required],
+    roles: [[] as string[], Validators.required],
     specialization: ['' as string],
     compensation_type: ['' as string],
     compensation_value: [null as number | null],
@@ -78,7 +78,7 @@ export class MemberFormDialog implements OnInit {
           .map(r => ({ value: r.key, label: r.name }));
         this.roles.set(filtered);
         if (filtered.length) {
-          this.form.get('role')!.setValue(filtered[filtered.length - 1].value);
+          this.form.get('roles')!.setValue([filtered[filtered.length - 1].value]);
         }
       },
     });
@@ -125,12 +125,12 @@ export class MemberFormDialog implements OnInit {
     if (!member || this.form.invalid) return;
     this.loading.set(true);
     this.error.set(null);
-    const { role, specialization, compensation_type, compensation_value } =
+    const { roles, specialization, compensation_type, compensation_value } =
       this.form.getRawValue();
     this.memberService
       .addMember(this.data.labId, {
         member_id: member.id,
-        role,
+        roles,
         ...(specialization && { specialization }),
         ...(compensation_type && { compensation_type }),
         ...(compensation_value != null && { compensation_value }),
