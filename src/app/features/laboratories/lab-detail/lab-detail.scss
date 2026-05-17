@@ -19,6 +19,13 @@
   }
 }
 
+.lab-header-actions {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  flex-shrink: 0;
+}
+
 .tab-content {
   padding: 24px 0;
 }

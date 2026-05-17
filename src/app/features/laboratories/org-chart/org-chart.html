@@ -1,0 +1,33 @@
+<div class="page-container">
+  <div class="page-header">
+    <button mat-icon-button [routerLink]="['/labs', labId()]">
+      <mat-icon>arrow_back</mat-icon>
+    </button>
+    <h1>Org Chart</h1>
+  </div>
+
+  @if (loading()) {
+    <div class="spinner-center">
+      <mat-progress-spinner mode="indeterminate" />
+    </div>
+  } @else if (levels().length === 0) {
+    <p class="empty">No members in this lab.</p>
+  } @else {
+    <div class="chart">
+      @for (level of levels(); track $index; let i = $index) {
+        @if (i > 0) {
+          <div class="level-connector"></div>
+        }
+        <div class="level">
+          @for (m of level; track m.member_id) {
+            <div class="member-card" [class.current-user]="isCurrentUser(m)">
+              <div class="avatar">{{ initials(m) }}</div>
+              <div class="name">{{ m.member?.first_name }} {{ m.member?.last_name }}</div>
+              <div class="role">{{ roleLabel(m.role) }}</div>
+            </div>
+          }
+        </div>
+      }
+    </div>
+  }
+</div>

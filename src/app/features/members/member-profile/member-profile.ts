@@ -1,19 +1,30 @@
-import { Component, OnInit, inject, signal } from '@angular/core';
+import { Component, OnInit, computed, inject, signal } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { HttpErrorResponse } from '@angular/common/http';
+import { forkJoin, of } from 'rxjs';
+import { RouterLink } from '@angular/router';
 import { MatButton } from '@angular/material/button';
 import { MatCard, MatCardContent, MatCardTitle } from '@angular/material/card';
 import { MatError, MatFormField, MatLabel } from '@angular/material/form-field';
+import { MatIcon } from '@angular/material/icon';
 import { MatInput } from '@angular/material/input';
 import { MatProgressSpinner } from '@angular/material/progress-spinner';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
+import { LAB_ROLE_LABELS, LabMembership, LabRole, ROLE_LEVEL } from '../../../core/models';
 import { AuthService } from '../../../core/auth/auth.service';
 import { MemberService } from '../../../core/services/member.service';
+
+interface LabReportingInfo {
+  labId: number;
+  labName: string;
+  reportsTo: LabMembership[];
+}
 
 @Component({
   selector: 'app-member-profile',
   imports: [
+    RouterLink,
     ReactiveFormsModule,
     MatCard,
     MatCardTitle,
@@ -23,6 +34,7 @@ import { MemberService } from '../../../core/services/member.service';
     MatError,
     MatInput,
     MatButton,
+    MatIcon,
     MatProgressSpinner,
   ],
   templateUrl: './member-profile.html',
@@ -35,12 +47,18 @@ export class MemberProfile implements OnInit {
   private readonly snackBar = inject(MatSnackBar);
 
   protected readonly loading = signal(false);
+  protected readonly hierarchyLoading = signal(true);
+  protected readonly reportingInfo = signal<LabReportingInfo[]>([]);
 
   protected readonly form = this.fb.nonNullable.group({
     first_name: ['', Validators.required],
     last_name: ['', Validators.required],
     password: [''],
   });
+
+  protected roleLabel(role: LabRole | string): string {
+    return LAB_ROLE_LABELS[role as LabRole] ?? role;
+  }
 
   ngOnInit(): void {
     const user = this.authService.currentUser();
@@ -50,6 +68,38 @@ export class MemberProfile implements OnInit {
         last_name: user.last_name,
       });
     }
+
+    const memberships = user?.lab_memberships ?? [];
+    if (memberships.length === 0) {
+      this.hierarchyLoading.set(false);
+      return;
+    }
+
+    const requests = memberships.map(m =>
+      this.memberService.getLabMembers(m.lab_id)
+    );
+
+    forkJoin(requests).subscribe({
+      next: labMembersArray => {
+        const info: LabReportingInfo[] = memberships.map((myMembership, i) => {
+          const myLevel = ROLE_LEVEL[myMembership.role as LabRole] ?? 99;
+          const superiors = myLevel === 0
+            ? []
+            : labMembersArray[i].filter(m =>
+                m.member_id !== myMembership.member_id &&
+                (ROLE_LEVEL[m.role as LabRole] ?? 99) === myLevel - 1
+              );
+          return {
+            labId: myMembership.lab_id,
+            labName: myMembership.laboratory?.name ?? `Lab #${myMembership.lab_id}`,
+            reportsTo: superiors,
+          };
+        });
+        this.reportingInfo.set(info);
+        this.hierarchyLoading.set(false);
+      },
+      error: () => this.hierarchyLoading.set(false),
+    });
   }
 
   protected submit(): void {

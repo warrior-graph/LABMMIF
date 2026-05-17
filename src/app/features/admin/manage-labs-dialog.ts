@@ -12,6 +12,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatTooltip } from '@angular/material/tooltip';
 
 import { LAB_ROLE_LABELS, LabMembership, LabRole, Laboratory, Member } from '../../core/models';
+import { AuthService } from '../../core/auth/auth.service';
 import { LaboratoryService } from '../../core/services/laboratory.service';
 import { MemberService } from '../../core/services/member.service';
 
@@ -53,8 +54,9 @@ export interface ManageLabsData {
             <div class="membership-row">
               <span class="lab-name">{{ m.laboratory?.name ?? 'Lab #' + m.lab_id }}</span>
               <span class="role-badge">{{ roleLabel(m.role) }}</span>
-              <button mat-icon-button color="warn" matTooltip="Remove from this lab"
-                (click)="remove(m)" [disabled]="removing().has(m.lab_id)">
+              <button mat-icon-button color="warn"
+                [matTooltip]="isSelf() ? 'Cannot modify your own membership' : 'Remove from this lab'"
+                (click)="remove(m)" [disabled]="removing().has(m.lab_id) || isSelf()">
                 @if (removing().has(m.lab_id)) {
                   <mat-progress-spinner diameter="18" mode="indeterminate" />
                 } @else {
@@ -136,6 +138,7 @@ export interface ManageLabsData {
 export class ManageLabsDialog implements OnInit {
   protected readonly data = inject<ManageLabsData>(MAT_DIALOG_DATA);
   private readonly dialogRef = inject(MatDialogRef<ManageLabsDialog>);
+  private readonly authService = inject(AuthService);
   private readonly memberService = inject(MemberService);
   private readonly labService = inject(LaboratoryService);
   private readonly snackBar = inject(MatSnackBar);
@@ -174,6 +177,10 @@ export class ManageLabsDialog implements OnInit {
 
   protected roleLabel(role: LabRole | string): string {
     return LAB_ROLE_LABELS[role as LabRole] ?? role;
+  }
+
+  protected isSelf(): boolean {
+    return this.data.member.id === this.authService.currentUser()?.id;
   }
 
   protected remove(membership: LabMembership): void {

@@ -58,6 +58,18 @@ export const LAB_ROLE_LABELS: Record<LabRole, string> = {
   [LabRole.STAFF]: 'Staff',
 };
 
+export const ROLE_LEVEL: Record<LabRole, number> = {
+  [LabRole.CEO]: 0,
+  [LabRole.ENGINEERING_MANAGER]: 1,
+  [LabRole.PROJECT_MANAGER]: 1,
+  [LabRole.CHIEF_SCIENTIST]: 1,
+  [LabRole.TECH_LEAD]: 2,
+  [LabRole.ENGINEER]: 3,
+  [LabRole.RESEARCHER]: 3,
+  [LabRole.RESEARCH_FELLOW]: 3,
+  [LabRole.STAFF]: 4,
+};
+
 // ─── Entities ─────────────────────────────────────────────────────────────────
 
 export interface Member {

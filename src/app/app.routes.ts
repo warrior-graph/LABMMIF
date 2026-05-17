@@ -27,6 +27,12 @@ export const routes: Routes = [
       import('./features/laboratories/lab-detail/lab-detail').then(m => m.LabDetail),
   },
   {
+    path: 'labs/:labId/org-chart',
+    canActivate: [authGuard],
+    loadComponent: () =>
+      import('./features/laboratories/org-chart/org-chart').then(m => m.OrgChart),
+  },
+  {
     path: 'labs/:labId/projects/:projectId',
     canActivate: [authGuard],
     loadComponent: () =>

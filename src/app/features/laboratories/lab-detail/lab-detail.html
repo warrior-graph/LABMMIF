@@ -10,12 +10,18 @@
         <h1>{{ lab()!.name }}</h1>
         <p class="description">{{ lab()!.description }}</p>
       </div>
-      @if (isSuperAdmin()) {
-        <button mat-stroked-button color="warn" (click)="deleteLab()">
-          <mat-icon>delete</mat-icon>
-          Delete Lab
+      <div class="lab-header-actions">
+        <button mat-stroked-button [routerLink]="['/labs', lab()!.id, 'org-chart']">
+          <mat-icon>account_tree</mat-icon>
+          Org Chart
         </button>
-      }
+        @if (isSuperAdmin()) {
+          <button mat-stroked-button color="warn" (click)="deleteLab()">
+            <mat-icon>delete</mat-icon>
+            Delete Lab
+          </button>
+        }
+      </div>
     </div>
 
     <!-- Tabs -->
@@ -73,7 +79,7 @@
             <ng-container matColumnDef="actions">
               <th mat-header-cell *matHeaderCellDef></th>
               <td mat-cell *matCellDef="let m">
-                @if (isCeo()) {
+                @if (isCeo() && m.member_id !== authService.currentUser()?.id) {
                   <button
                     mat-icon-button
                     color="warn"

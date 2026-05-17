@@ -48,4 +48,41 @@
       </form>
     </mat-card-content>
   </mat-card>
+
+  <!-- Reporting Structure -->
+  <mat-card class="hierarchy-card">
+    <mat-card-title>Reporting Structure</mat-card-title>
+    <mat-card-content>
+      @if (hierarchyLoading()) {
+        <mat-progress-spinner mode="indeterminate" diameter="32" />
+      } @else if (reportingInfo().length === 0) {
+        <p class="empty-text">No lab memberships found.</p>
+      } @else {
+        @for (info of reportingInfo(); track info.labId) {
+          <div class="lab-section">
+            <div class="lab-section-header">
+              <span class="lab-name">{{ info.labName }}</span>
+              <a mat-button [routerLink]="['/labs', info.labId, 'org-chart']" class="org-chart-link">
+                <mat-icon>account_tree</mat-icon>
+                View Org Chart
+              </a>
+            </div>
+            @if (info.reportsTo.length === 0) {
+              <p class="top-text">Top of hierarchy in this lab.</p>
+            } @else {
+              <p class="reports-label">Reports to:</p>
+              <div class="reports-list">
+                @for (m of info.reportsTo; track m.member_id) {
+                  <div class="report-chip">
+                    <span class="report-name">{{ m.member?.first_name }} {{ m.member?.last_name }}</span>
+                    <span class="report-role">{{ roleLabel(m.role) }}</span>
+                  </div>
+                }
+              </div>
+            }
+          </div>
+        }
+      }
+    </mat-card-content>
+  </mat-card>
 </div>

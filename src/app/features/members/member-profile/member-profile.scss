@@ -34,3 +34,78 @@ mat-card {
   justify-content: flex-end;
   margin-top: 8px;
 }
+
+.hierarchy-card {
+  margin-top: 24px;
+  padding: 24px;
+}
+
+.empty-text {
+  color: var(--mat-sys-on-surface-variant);
+  font-size: 14px;
+  margin: 0;
+}
+
+.lab-section {
+  & + .lab-section {
+    margin-top: 20px;
+    padding-top: 20px;
+    border-top: 1px solid var(--mat-sys-outline-variant);
+  }
+}
+
+.lab-section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+
+.lab-name {
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.org-chart-link {
+  font-size: 13px;
+}
+
+.top-text {
+  font-size: 14px;
+  color: var(--mat-sys-on-surface-variant);
+  margin: 0;
+}
+
+.reports-label {
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--mat-sys-on-surface-variant);
+  margin: 0 0 8px;
+}
+
+.reports-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.report-chip {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  border-radius: 20px;
+  background: var(--mat-sys-surface-container);
+  font-size: 13px;
+}
+
+.report-name {
+  font-weight: 500;
+}
+
+.report-role {
+  color: var(--mat-sys-on-surface-variant);
+  font-size: 12px;
+}
