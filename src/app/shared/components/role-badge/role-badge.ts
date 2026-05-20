@@ -4,7 +4,7 @@ import { MatChip, MatChipSet } from '@angular/material/chips';
 import { LAB_ROLE_LABELS, LabRole, ROLE_LEVEL } from '../../../core/models';
 
 const ROLE_COLOR: Record<LabRole, string> = {
-  [LabRole.CEO]: 'role-ceo',
+  [LabRole.LAB_COORDINATOR]: 'role-coordinator',
   [LabRole.ENGINEERING_MANAGER]: 'role-manager',
   [LabRole.PROJECT_MANAGER]: 'role-manager',
   [LabRole.CHIEF_SCIENTIST]: 'role-scientist',

@@ -1,7 +1,7 @@
 // ─── Enums ───────────────────────────────────────────────────────────────────
 
 export enum LabRole {
-  CEO = 'ceo',
+  LAB_COORDINATOR = 'lab_coordinator',
   ENGINEERING_MANAGER = 'engineering_manager',
   PROJECT_MANAGER = 'project_manager',
   CHIEF_SCIENTIST = 'chief_scientist',
@@ -46,7 +46,7 @@ export enum ItemCondition {
 // ─── Role helpers ─────────────────────────────────────────────────────────────
 
 export const MANAGER_ROLES: LabRole[] = [
-  LabRole.CEO,
+  LabRole.LAB_COORDINATOR,
   LabRole.ENGINEERING_MANAGER,
   LabRole.PROJECT_MANAGER,
   LabRole.CHIEF_SCIENTIST,
@@ -65,7 +65,7 @@ export const RESEARCHER_AND_ABOVE: LabRole[] = [
 ];
 
 export const LAB_ROLE_LABELS: Record<LabRole, string> = {
-  [LabRole.CEO]: 'CEO',
+  [LabRole.LAB_COORDINATOR]: 'Lab Coordinator',
   [LabRole.ENGINEERING_MANAGER]: 'Engineering Manager',
   [LabRole.PROJECT_MANAGER]: 'Project Manager',
   [LabRole.CHIEF_SCIENTIST]: 'Chief Scientist',
@@ -77,7 +77,7 @@ export const LAB_ROLE_LABELS: Record<LabRole, string> = {
 };
 
 export const ROLE_LEVEL: Record<LabRole, number> = {
-  [LabRole.CEO]: 0,
+  [LabRole.LAB_COORDINATOR]: 0,
   [LabRole.ENGINEERING_MANAGER]: 1,
   [LabRole.PROJECT_MANAGER]: 1,
   [LabRole.CHIEF_SCIENTIST]: 1,

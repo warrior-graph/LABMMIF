@@ -146,13 +146,13 @@ export class LabDetail implements OnInit, AfterViewInit {
   protected readonly isCeo = computed(() => {
     if (this.isSuperAdmin()) return true;
     const m = this.currentMembership();
-    return m?.roles?.includes(LabRole.CEO) ?? false;
+    return m?.roles?.includes(LabRole.LAB_COORDINATOR) ?? false;
   });
 
   protected readonly isChiefScientist = computed(() => {
     if (this.isSuperAdmin()) return true;
     const m = this.currentMembership();
-    return m ? (m.roles?.includes(LabRole.CEO) || m.roles?.includes(LabRole.CHIEF_SCIENTIST)) : false;
+    return m ? (m.roles?.includes(LabRole.LAB_COORDINATOR) || m.roles?.includes(LabRole.CHIEF_SCIENTIST)) : false;
   });
 
   protected readonly isManager = computed(() => {
@@ -380,7 +380,7 @@ export class LabDetail implements OnInit, AfterViewInit {
 
   protected openAddResearch(): void {
     const chiefScientists = this.members().filter(
-      m => m.roles?.some(r => r === LabRole.CHIEF_SCIENTIST || r === LabRole.CEO)
+      m => m.roles?.some(r => r === LabRole.CHIEF_SCIENTIST || r === LabRole.LAB_COORDINATOR)
     );
     const ref = this.dialog.open(ResearchFormDialog, {
       width: '480px',

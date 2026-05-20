@@ -54,7 +54,7 @@ import { RoleService } from '../../../core/services/role.service';
           <mat-form-field appearance="outline">
             <mat-label>Level</mat-label>
             <mat-select formControlName="level">
-              <mat-option [value]="0">0 – Same as CEO</mat-option>
+              <mat-option [value]="0">0 – Same as Lab Coordinator</mat-option>
               <mat-option [value]="1">1 – Manager tier</mat-option>
               <mat-option [value]="2">2 – Lead tier</mat-option>
               <mat-option [value]="3">3 – Individual contributor</mat-option>

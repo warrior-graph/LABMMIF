@@ -96,7 +96,7 @@ export class ProjectDetail implements OnInit {
     const m = this.currentMembership();
     if (!m) return false;
     return (
-      m.roles?.includes(LabRole.CEO) ||
+      m.roles?.includes(LabRole.LAB_COORDINATOR) ||
       m.roles?.includes(LabRole.ENGINEERING_MANAGER) ||
       m.roles?.includes(LabRole.PROJECT_MANAGER)
     ) ?? false;

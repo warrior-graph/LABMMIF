@@ -88,7 +88,7 @@ export class ResearchDetail implements OnInit {
   protected readonly canManageMembers = computed(() => {
     if (this.authService.currentUser()?.is_super_admin) return true;
     const m = this.currentMembership();
-    return m ? (m.roles?.includes(LabRole.CEO) || m.roles?.includes(LabRole.CHIEF_SCIENTIST)) : false;
+    return m ? (m.roles?.includes(LabRole.LAB_COORDINATOR) || m.roles?.includes(LabRole.CHIEF_SCIENTIST)) : false;
   });
 
   ngOnInit(): void {
